@@ -29,7 +29,7 @@ public class UserHandler {
              PreparedStatement pst = con.prepareStatement(sql);) {
             pst.setString(1, name);
             pst.setString(2, fname);
-            pst.setString(3, password);
+            pst.setString(3, String.valueOf(password.hashCode()));
             pst.setString(4, email);
             pst.setString(5, phone);
             pst.executeUpdate();
@@ -56,7 +56,7 @@ public class UserHandler {
              Statement stm = con.createStatement();
              ResultSet rs = stm.executeQuery(sql);) {
             while(rs.next()) {
-                if (name.equals(rs.getString(DB.USER_NAME_ID)) && (password.equals(rs.getString(DB.PASSWORD)))) {
+                if (name.equals(rs.getString(DB.USER_NAME_ID)) && (String.valueOf(password.hashCode()).equals(rs.getString(DB.PASSWORD)))) {
                     success = true;
                     break;
                 };
