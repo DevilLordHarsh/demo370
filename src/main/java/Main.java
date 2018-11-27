@@ -1,8 +1,7 @@
 import spark.ModelAndView;
 import spark.template.velocity.VelocityTemplateEngine;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static spark.Spark.*;
 
@@ -34,27 +33,45 @@ public class Main {
 
         // Main program homepage. Enter in browser, address "localhost:4567"
         get("/", (req, res) -> {
-
-            return showPage(null, INDEX);
+            if (req.session().attributes().isEmpty()) {
+                return showPage(null, INDEX);
+            }
+            else return showPage(req.session().attribute(USER_NAME), INDEX);
         }, new VelocityTemplateEngine());
 
         // Handling user login requests
         post("/login", (req, res) -> {
+
             if (UserHandler.loginUser(req.queryParams(USER_NAME), req.queryParams(PASSWORD))) {
-                return showPage(req.queryParams(USER_NAME), INDEX);
+                req.session().attribute(USER_NAME, req.queryParams(USER_NAME));
+                Set<String> trackuser = req.session().attributes();
+                Set<String> trackuserValues = new HashSet<>();
+                for (String s: trackuser) {
+                    trackuserValues.add(req.session().attribute(s));
+                }
+                req.session().invalidate();
+                Iterator iterator1 = trackuser.iterator();
+                Iterator iterator2 = trackuserValues.iterator();
+                while (iterator1.hasNext()){
+                    req.session().attribute((String) iterator1.next(), iterator2.next());
+                }
+                return showPage(req.session().attribute(USER_NAME), INDEX);
             }
             else return showError("Login Error!");
         }, new VelocityTemplateEngine());
 
         // Logging out a user
         post("/logout", (req, res) -> {
-            // todo: remove from session
+            req.session().invalidate();
             return showPage(null, INDEX);
         }, new VelocityTemplateEngine());
 
         // Show user their profile page
         post("/userprofile", (req, res) -> {
-            return showPage("myself", USER_PROFILE);
+            if (req.session().attributes().isEmpty()) {
+                return showPage(null, USER_PROFILE);
+            }
+            else return showPage(req.session().attribute(USER_NAME), USER_PROFILE);
         }, new VelocityTemplateEngine());
 
         // Handling registration requests for new users
@@ -72,7 +89,7 @@ public class Main {
 
     static ModelAndView showTestPage() {
         Map<String, Object> model = new HashMap<>();
-//        model.put("istrue", true);
+        model.put("istrue", true);
         model.put("message", "heyhey");
         return new ModelAndView(model, "templates/hello.vm");
     }
