@@ -8,64 +8,109 @@ import java.sql.SQLException;
  */
 public class CreateMyDatabases {
 
-    // database file names
-    public static final String USERS_DATABASE = "src/main/resources/dbs/users.db";
-    public static final String ARCHIVE_DATABASE = "src/main/resources/dbs/archive.db";
-    public static final String FLIGHTS_DATABASE = "src/main/resources/dbs/flights.db";
-
-    //locations available for travel
-    private static final String VANCOUVER = "Vancouver";
-    private static final String AIRDRIE = "Airdrie";
-    private static final String BURNABY = "Burnaby";
-    private static final String CALGARY = "Calgary";
-    private static final String TORONTO = "Toronto";
-    private static final String ABBOTSFORD = "Abbotsford";
-
-    //airline companies and available airplanes
-    private static final String QUICK_AIRLINES = "QuickAirlines";
-      private static final String WINDJET = "WindJet";
-      private static final String BLAZEJET = "BlazeJet";
-
-    private static final String CRAZY_AIRLINES = "CrazyAirlines";
-      private static final String KNOTCHJET = "KnotchJet";
-      private static final String RICOCHETJET = "RicochetJet";
-
     // creates required databases and tables if they don't already exist
     public static void init() {
 
-        String sql = "CREATE TABLE IF NOT EXISTS users (\n"
-                + "	name text PRIMARY KEY,\n"
-                + "	fname text NOT NULL,\n"
-                + "	password text NOT NULL,\n"
-                + "	email text NOT NULL,\n"
-                + "	phone text NOT NULL\n"
+        String customers = "CREATE TABLE IF NOT EXISTS "+ DB.CUSTOMERS_TABLE+" (\n"
+                + DB.USER_NAME_ID + " text PRIMARY KEY,\n"
+                + DB.FULL_NAME + " text NOT NULL,\n"
+                + DB.PASSWORD + " text NOT NULL,\n"
+                + DB.EMAIL + " text NOT NULL,\n"
+                + DB.PHONE + " text NOT NULL\n"
                 + ");";
 
-        try (Connection con = DatabaseHandler.createOrConnect(USERS_DATABASE);) {
-            con.createStatement().execute(sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        try (Connection con = DatabaseHandler.createOrConnect(ARCHIVE_DATABASE);) {
-            // todo: create table with all columns required for archiving
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-
-        //destination, departure, price, airline, airplane
-        String[] item1 = {VANCOUVER, AIRDRIE, "412", };
-        sql = "CREATE TABLE IF NOT EXISTS flights (\n"
-                + "	company text PRIMARY KEY,\n"
-                + "	flight text NOT NULL,\n"
+        String flights = "CREATE TABLE IF NOT EXISTS "+ DB.FLIGHTS_INFO_TABLE+" (\n"
+                + DB.FLIGHT_INFO_ID + " text PRIMARY KEY,\n"
+                + DB.DESTINATION + " text NOT NULL,\n"
+                + DB.DEPARTURE + " text NOT NULL,\n"
+                + DB.TIME + " text NOT NULL,\n"
+                + DB.AIRPLANE_ID + " text NOT NULL,\n"
+                + "FOREIGN KEY ("+ DB.AIRPLANE_ID +") REFERENCES "
+                + DB.AIRPLANES_TABLE + "("+ DB.AIRPLANE_ID +")"
                 + ");";
 
-        try (Connection con = DatabaseHandler.createOrConnect(FLIGHTS_DATABASE);) {
-            // todo: create table with all columns required for archiving
+        String tickets = "CREATE TABLE IF NOT EXISTS "+ DB.TICKETS_TABLE+" (\n"
+                + DB.TICKET_ID + " text PRIMARY KEY,\n"
+                + DB.USER_NAME_ID + " text NOT NULL,\n"
+                + DB.PAYMENT_ID + " text NOT NULL,\n"
+                + DB.FLIGHT_INFO_ID + " text NOT NULL,\n"
+                + "FOREIGN KEY ("+ DB.USER_NAME_ID +") REFERENCES "
+                + DB.CUSTOMERS_TABLE + "("+ DB.USER_NAME_ID +"),\n"
+                + "FOREIGN KEY ("+ DB.PAYMENT_ID +") REFERENCES "
+                + DB.PAYMENTS_TABLE + "("+ DB.PAYMENT_ID +"),\n"
+                + "FOREIGN KEY ("+ DB.FLIGHT_INFO_ID +") REFERENCES "
+                + DB.FLIGHTS_INFO_TABLE + "("+ DB.FLIGHT_INFO_ID +")\n"
+                + ");";
+
+        String payments = "CREATE TABLE IF NOT EXISTS "+ DB.PAYMENTS_TABLE+" (\n"
+                + DB.PAYMENT_ID + " text PRIMARY KEY,\n"
+                + DB.AMOUNT + " text NOT NULL,\n"
+                + DB.STATUS + " text NOT NULL,\n"
+                + DB.CARD_NUMBER + " text NOT NULL,\n"
+                + "FOREIGN KEY ("+ DB.CARD_NUMBER +") REFERENCES "
+                + DB.CREDIT_CARDS_TABLE + "("+ DB.CARD_NUMBER +")\n"
+                + ");";
+
+        String credit_cards = "CREATE TABLE IF NOT EXISTS "+ DB.CREDIT_CARDS_TABLE+" (\n"
+                + DB.CARD_NUMBER + " text PRIMARY KEY,\n"
+                + DB.CVV + " text NOT NULL,\n"
+                + DB.EXPIRY + " text NOT NULL\n"
+                + ");";
+
+        String airplanes = "CREATE TABLE IF NOT EXISTS "+ DB.AIRPLANES_TABLE+" (\n"
+                + DB.AIRPLANE_ID + " text PRIMARY KEY,\n"
+                + DB.AIRLINE_NAME + " text NOT NULL\n"
+                + ");";
+
+        try (Connection con = DatabaseHandler.createOrConnect(DB.PTBS_DATABASE);) {
+            con.createStatement().execute(customers);
+            con.createStatement().execute(flights);
+            con.createStatement().execute(tickets);
+            con.createStatement().execute(payments);
+            con.createStatement().execute(credit_cards);
+            con.createStatement().execute(airplanes);
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        String archive = "CREATE TABLE IF NOT EXISTS transactions (\n"
+                + DB.TICKET_ID + " text NOT NULL,\n"
+                + "date_time text NOT NULL,\n"
+                + "FOREIGN KEY ("+ DB.TICKET_ID +") REFERENCES "
+                + DB.TICKETS_TABLE + "("+ DB.TICKET_ID +")\n"
+                + ");";
+
+        try (Connection con = DatabaseHandler.createOrConnect(DB.ARCHIVE_DATABASE);) {
+            con.createStatement().execute(archive);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        // populate tables in database with fake data
+        populateFakeData();
+
+    }
+
+    private static void populateFakeData() {
+        // todo: fill tables with fake data
+
+        //locations available for travel
+        String VANCOUVER = "Vancouver";
+        String AIRDRIE = "Airdrie";
+        String BURNABY = "Burnaby";
+        String CALGARY = "Calgary";
+        String TORONTO = "Toronto";
+        String ABBOTSFORD = "Abbotsford";
+
+        //airline companies and available airplanes
+        String QUICK_AIRLINES = "QuickAirlines";
+        String WINDJET = "WindJet";
+        String BLAZEJET = "BlazeJet";
+
+        String CRAZY_AIRLINES = "CrazyAirlines";
+        String KNOTCHJET = "KnotchJet";
+        String RICOCHETJET = "RicochetJet";
     }
 
 }

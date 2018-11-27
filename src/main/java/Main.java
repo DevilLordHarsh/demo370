@@ -17,14 +17,15 @@ public class Main {
 
     private static final String LOGOUT = "logout";
 
-    // Return to homepage button
-    private static final String RET_HOME_BTN = "<br>\n" +
-            "<form class= \"button\" action=\"/\" method=\"get\">\n" +
-            "    <input type=\"submit\" value=\"Return\" />\n" +
-            "</form>";
+    // webpage template file locations
+    private static final String INDEX = "templates/index.vm";
+    private static final String USER_PROFILE = "templates/userprofile.vm";
+    private static final String LOGGED = "templates/logged.vm";
+    private static final String NOT_LOGGED = "templates/notlogged.vm";
+    private static final String ERROR = "templates/error.vm";
+
 
     public static void main(String[] args) {
-        String currUser;
 
         // Create and populate databases to demonstrate working of this application
         CreateMyDatabases.init();
@@ -34,33 +35,37 @@ public class Main {
         // Main program homepage. Enter in browser, address "localhost:4567"
         get("/", (req, res) -> {
 
-            return showHomePage("myself");
+            return showPage(null, INDEX);
         }, new VelocityTemplateEngine());
 
         // Handling user login requests
         post("/login", (req, res) -> {
             if (UserHandler.loginUser(req.queryParams(USER_NAME), req.queryParams(PASSWORD))) {
-                return "welcome "+req.queryParams(USER_NAME);
-
+                return showPage(req.queryParams(USER_NAME), INDEX);
             }
-            else return "Login Error!" + RET_HOME_BTN;
-        });
+            else return showError("Login Error!");
+        }, new VelocityTemplateEngine());
 
         // Logging out a user
         post("/logout", (req, res) -> {
             // todo: remove from session
-            return showHomePage(null);
-        });
+            return showPage(null, INDEX);
+        }, new VelocityTemplateEngine());
+
+        // Show user their profile page
+        post("/userprofile", (req, res) -> {
+            return showPage("myself", USER_PROFILE);
+        }, new VelocityTemplateEngine());
 
         // Handling registration requests for new users
         post("/register", (req, res) -> {
             if (UserHandler.registerUser(req.queryParams(USER_NAME),
                     req.queryParams(FULL_NAME), req.queryParams(PASSWORD),
                     req.queryParams(EMAIL), req.queryParams(PHONE))) {
-                return "Registered successfully!" + RET_HOME_BTN;
+                return showError("Registered successfully!");
             }
-            else return "Registration Error! Try different unique username." + RET_HOME_BTN;
-        });
+            else return showError("Registration Error! Try different unique username.");
+        }, new VelocityTemplateEngine());
     }
 
     // Methods serving webpages dynamically
@@ -72,15 +77,21 @@ public class Main {
         return new ModelAndView(model, "templates/hello.vm");
     }
 
-    static ModelAndView showHomePage(String username) {
+    static ModelAndView showError(String message) {
+        Map<String, Object> model = new HashMap<>();
+        model.put("message", message);
+        return new ModelAndView(model, ERROR);
+    }
+
+    static ModelAndView showPage(String username, String vmfile) {
         Map<String, Object> model = new HashMap<>();
         if (username != null) {
-            model.put("showlogged", "templates/logged.vm");
+            model.put("showlogged", LOGGED);
             model.put("username", username);
         }
         else {
-            model.put("showlogged", "templates/notlogged.txt");
+            model.put("showlogged", NOT_LOGGED);
         }
-        return new ModelAndView(model, "templates/index.vm");
+        return new ModelAndView(model, vmfile);
     }
 }

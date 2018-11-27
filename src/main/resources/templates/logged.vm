@@ -1,6 +1,11 @@
   <div>
-    <button class="button">$username</button>
-    <form action="/logout" method="post">
+
+    <form action="/userprofile" method="post" style="display:inline-block;">
+      <button class="button" type="submit">$username</button>
+    </form>
+
+    <form action="/logout" method="post" style="display:inline-block;">
       <button class="button" style="background-color:#f4b642;" type="submit">Logout</button>
     </form>
+
   </div>

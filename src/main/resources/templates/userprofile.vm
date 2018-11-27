@@ -1,0 +1,7 @@
+#include("templates/uptobody.txt")
+
+  #parse($showlogged)
+  
+  #include("templates/userprofilemenu.txt")
+
+#include("templates/afterbody.txt")

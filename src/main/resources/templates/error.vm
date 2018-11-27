@@ -1,0 +1,11 @@
+<h3 class="cleaning">$message</h3>
+
+<form action="/" method="get">
+  <button style="background-color:#2b407c;
+    color: white;
+    padding: 8px 15px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: auto;" type="submit">Return</button>
+</form>

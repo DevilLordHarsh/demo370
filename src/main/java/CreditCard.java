@@ -5,7 +5,8 @@
 public class CreditCard {
 
     private String cardNumber;
-    private String securityCode;
+    private String cardVerificationValue;
+    private String expiry;
 
     public String getCardNumber() {
         return cardNumber;
@@ -15,16 +16,25 @@ public class CreditCard {
         this.cardNumber = cardNumber;
     }
 
-    public String getSecurityCode() {
-        return securityCode;
+    public String getCardVerificationValue() {
+        return cardVerificationValue;
     }
 
-    public void setSecurityCode(String securityCode) {
-        this.securityCode = securityCode;
+    public void setCardVerificationValue(String cardVerificationValue) {
+        this.cardVerificationValue = cardVerificationValue;
     }
 
-    CreditCard(String number, Object code) {
+    public String getExpiry() {
+        return expiry;
+    }
+
+    public void setExpiry(String expiry) {
+        this.expiry = expiry;
+    }
+
+    CreditCard(String number, String cvv, String expiry) {
         this.cardNumber = number;
-        this.securityCode = (String) code;
+        this.cardVerificationValue = cvv;
+        this.expiry = expiry;
     }
 }

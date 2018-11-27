@@ -21,9 +21,11 @@ public class UserHandler {
      */
     public static boolean registerUser(String name, String fname, String password, String email, String phone) {
         boolean success = false;
-        String sql = "INSERT INTO users(name,fname,password,email,phone) VALUES(?,?,?,?,?)";
+        String sql = "INSERT INTO "+DB.CUSTOMERS_TABLE+"(" +
+                DB.USER_NAME_ID +","+ DB.FULL_NAME +","+ DB.PASSWORD +
+                ","+ DB.EMAIL +","+ DB.PHONE +") VALUES(?,?,?,?,?)";
 
-        try (Connection con = DatabaseHandler.createOrConnect(CreateMyDatabases.USERS_DATABASE);
+        try (Connection con = DatabaseHandler.createOrConnect(DB.PTBS_DATABASE);
              PreparedStatement pst = con.prepareStatement(sql);) {
             pst.setString(1, name);
             pst.setString(2, fname);
@@ -47,13 +49,14 @@ public class UserHandler {
      */
     public static boolean loginUser(String name, String password) {
         boolean success = false;
-        String sql = "SELECT name, password FROM users WHERE name = \""+name+"\"";
+        String sql = "SELECT "+DB.USER_NAME_ID+", "+DB.PASSWORD+" FROM " +
+                DB.CUSTOMERS_TABLE +" WHERE "+ DB.USER_NAME_ID +" = \""+name+"\"";
 
-        try (Connection con = DatabaseHandler.createOrConnect(CreateMyDatabases.USERS_DATABASE);
+        try (Connection con = DatabaseHandler.createOrConnect(DB.PTBS_DATABASE);
              Statement stm = con.createStatement();
              ResultSet rs = stm.executeQuery(sql);) {
             while(rs.next()) {
-                if (name.equals(rs.getString("name")) && (password.equals(rs.getString("password")))) {
+                if (name.equals(rs.getString(DB.USER_NAME_ID)) && (password.equals(rs.getString(DB.PASSWORD)))) {
                     success = true;
                     break;
                 };

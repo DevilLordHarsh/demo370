@@ -1,26 +1,26 @@
 public class User {
 
-    private String name;
-    private String fname;
+    private String userName;
+    private String fullName;
     private String password;
     private String email;
     private String phone;
-    private CreditCard card;
+    private String[] ticketIds;
 
-    public String getName() {
-        return name;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getFullName() {
-        return fname;
+        return fullName;
     }
 
     public void setFullName(String name) {
-        this.fname = name;
+        this.fullName = name;
     }
 
     public String getPassword() {
@@ -47,17 +47,10 @@ public class User {
         this.phone = phone;
     }
 
-    public CreditCard getCard() {
-        return card;
-    }
-
-    public void setCard(CreditCard card) {
-        this.card = card;
-    }
 
     User(String name, String fname, String password, String email, String phone) {
-        this.name = name;
-        this.fname = fname;
+        this.userName = name;
+        this.fullName = fname;
         this. password = password;
         this.email = email;
         this.phone = phone;
