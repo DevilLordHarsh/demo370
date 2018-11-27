@@ -1,0 +1,24 @@
+<div id="id01" style="display:none; background-color:#f1f1f1">
+
+    <form action="/login" method="post">
+
+      <div class="cleaning">
+	<br>
+        <label for="uname"><b>Username</b></label>
+        <input type="text" placeholder="Enter Username" name="uname" required>
+      </div>
+
+      <div class="cleaning">
+	<br>
+        <label for="psw"><b>Password</b></label>
+        <input type="password" placeholder="Enter Password" name="psw" required>
+      </div>
+	
+      <div>
+	<br>
+	<button class="button" type="button" style="background-color:#f44336;" onclick="document.getElementById('id01').style.display='none'">Cancel</button>
+        <button class="button" type="submit">Login</button>
+      </div>
+
+    </form>
+  </div>

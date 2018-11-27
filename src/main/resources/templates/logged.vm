@@ -1,0 +1,6 @@
+  <div>
+    <button class="button">$username</button>
+    <form action="/logout" method="post">
+      <button class="button" style="background-color:#f4b642;" type="submit">Logout</button>
+    </form>
+  </div>

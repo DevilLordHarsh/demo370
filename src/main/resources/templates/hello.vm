@@ -1,0 +1,10 @@
+<html>
+  <body>
+  #if ($istrue == true)
+  Hello $message World!
+  #else
+  Hello false $message World!
+  #end
+
+  </body>
+</html>

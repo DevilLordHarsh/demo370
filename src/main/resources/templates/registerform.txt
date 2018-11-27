@@ -1,0 +1,42 @@
+<div id="id02" style="display:none; background-color:#f1f1f1">
+
+    <form action="/register" method="post">
+
+      <div class="cleaning">
+	<br>
+        <label for="uname"><b>Username</b></label>
+        <input type="text" placeholder="Enter Username" name="uname" required>
+      </div>
+
+      <div class="cleaning">
+	<br>
+        <label for="fname"><b>Fullname</b></label>
+        <input type="text" placeholder="Enter your Full name" name="fname" required>
+      </div>
+
+      <div class="cleaning">
+	<br>
+        <label for="psw"><b>Password</b></label>
+        <input type="password" placeholder="Enter Password" name="psw" required>
+      </div>
+	
+      <div class="cleaning">
+	<br>
+          <label for="eml"><b>Email</b></label>
+          <input type="email" placeholder="Enter Email Address" name="eml" required>
+      </div>
+	
+      <div class="cleaning">
+	<br>
+        <label for="phn"><b>Phone</b></label>
+        <input type="number" placeholder="Enter Phone number" name="phn" required>
+      </div>
+
+      <div>
+	<br>
+	<button class="button" type="button" style="background-color:#f44336;" onclick="document.getElementById('id02').style.display='none'">Cancel</button>
+        <button class="button" type="submit">Register</button>
+      </div>
+
+    </form>
+  </div>

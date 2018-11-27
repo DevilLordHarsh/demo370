@@ -1,0 +1,7 @@
+  <div>
+    <button class="button" onclick="document.getElementById('id01').style.display='block';document.getElementById('id02').style.display='none'">Login</button>
+    <button class="button" onclick="document.getElementById('id02').style.display='block';document.getElementById('id01').style.display='none'">Register</button>
+  </div>
+
+  #include("templates/loginform.txt")
+  #include("templates/registerform.txt")

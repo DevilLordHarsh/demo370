@@ -1,0 +1,7 @@
+#include("templates/uptobody.txt")
+
+  #parse($showlogged)
+  
+  <h1>Welcome to Airline Ticket Booking System</h1>
+
+#include("templates/afterbody.txt")
