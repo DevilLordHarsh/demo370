@@ -9,6 +9,30 @@
 
   <style>
 
+    td {
+    text-align: center;
+    }
+    .show_ticket {
+    display: inline-block;
+    color: #986767;
+    }
+
+    .ticket_container {
+    padding: 12px;
+    margin: 8px 0;
+    }
+
+    .options {
+    background-color: #b1eced;
+    color: #4d1284;
+    padding: 8px 35px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: auto;
+    list-style-type: none;
+    }
+
     .button {
     background-color: #4CAF50;
     color: white;

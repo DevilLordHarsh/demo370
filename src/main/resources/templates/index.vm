@@ -4,4 +4,32 @@
   
   <h1>Welcome to Airline Ticket Booking System</h1>
 
+  <div class="ticket_container">
+
+    #if($destinationchosen)
+    <div class="show_ticket"><font size="5">Flight from <b> $destinationchosen </b> to </font></div>
+
+    #if($departurechosen)
+    <div class="show_ticket"><font size="5"><b> $departurechosen </b>, Departure time: </font></div>
+
+    #if($time)
+    <div class="show_ticket"><font size="5"><b> $time </b>, Ticket price: $ <b> $price </b></font></div>
+    #parse("templates/buyticket.vm")
+
+    #else
+    #parse("templates/formdatechosen.vm")
+    #end
+
+    #else
+    #parse("templates/formdeparturechosen.vm")
+    #end
+
+    #else
+    #parse("templates/formdestinationchosen.vm")
+    #end
+
+  </div>
+
+
+
 #include("templates/afterbody.txt")

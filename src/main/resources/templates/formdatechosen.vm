@@ -1,0 +1,14 @@
+
+  <h3>Please select flight date:</h3>
+
+  <ul>
+
+  #foreach($time in $times)
+
+    <form action="/" method="get">
+      <button name="time" value=$time type="submit" class="options"><li>$time</li></button>
+    </form>
+
+  #end
+
+  </ul>

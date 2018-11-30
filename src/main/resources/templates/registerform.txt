@@ -4,31 +4,31 @@
 
       <div class="cleaning">
 	<br>
-        <label for="uname"><b>Username</b></label>
+        <label for="uname"><b>Username</b></label><br>
         <input type="text" placeholder="Enter Username" name="uname" required>
       </div>
 
       <div class="cleaning">
 	<br>
-        <label for="fname"><b>Fullname </b></label>
+        <label for="fname"><b>Fullname </b></label><br>
         <input type="text" placeholder="Enter your Full userName" name="fname" required>
       </div>
 
       <div class="cleaning">
 	<br>
-        <label for="psw"><b>Password </b></label>
+        <label for="psw"><b>Password </b></label><br>
         <input type="password" placeholder="Enter Password" name="psw" required>
       </div>
 	
       <div class="cleaning">
 	<br>
-          <label for="eml"><b>Email    </b></label>
+          <label for="eml"><b>Email    </b></label><br>
           <input type="email" placeholder="Enter Email Address" name="eml" required>
       </div>
 	
       <div class="cleaning">
 	<br>
-        <label for="phn"><b>Phone    </b></label>
+        <label for="phn"><b>Phone    </b></label><br>
         <input type="number" placeholder="Enter Phone number" name="phn" required>
       </div>
 

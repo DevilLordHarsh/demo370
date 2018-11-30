@@ -1,0 +1,14 @@
+
+  <h3>Please select a departure location:</h3>
+
+  <ul>
+
+  #foreach($loc in $departurelocations)
+
+    <form action="/" method="get">
+      <button name="departurelocation" value=$loc type="submit" class="options"><li>$loc</li></button>
+    </form>
+
+  #end
+
+  </ul>

@@ -1,0 +1,34 @@
+<div>
+
+    <form action="/payment" method="post">
+      <div class="cleaning">
+	<br>
+        <label for="cnumber"><b>Enter credit card number: </b></label><br>
+        <input type="text" placeholder="16 digit card number" name="cnumber" required>
+      </div>
+
+      <div class="cleaning">
+	<br>
+        <label for="ccvv"><b>Enter card verification value: </b></label><br>
+        <input type="text" placeholder="3 digit security code" name="ccvv" required>
+      </div>
+
+      <div class="cleaning">
+	<br>
+        <label for="cexpiry"><b>Enter credit card expiry date: </b></label><br>
+        <input type="text" placeholder="e.g. 22dec2018" name="cexpiry" required>
+      </div>
+
+      <div class="cleaning">
+	<br>
+        <label for="psw"><b>Enter Password for verification:</b></label><br>
+        <input type="password" placeholder="Password" name="psw" required>
+      </div>
+
+      <div>
+	<br>
+      </div>
+      <button class="button" style="background-color:#e46658;" type="submit">Buy Ticket</button>
+    </form>
+
+</div>

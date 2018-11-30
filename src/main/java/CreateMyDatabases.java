@@ -1,4 +1,5 @@
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
@@ -20,7 +21,7 @@ public class CreateMyDatabases {
                 + ");";
 
         String flights = "CREATE TABLE IF NOT EXISTS "+ DB.FLIGHTS_INFO_TABLE+" (\n"
-                + DB.FLIGHT_INFO_ID + " text PRIMARY KEY,\n"
+                + DB.FLIGHT_INFO_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,\n"
                 + DB.DESTINATION + " text NOT NULL,\n"
                 + DB.DEPARTURE + " text NOT NULL,\n"
                 + DB.TIME + " text NOT NULL,\n"
@@ -30,10 +31,11 @@ public class CreateMyDatabases {
                 + ");";
 
         String tickets = "CREATE TABLE IF NOT EXISTS "+ DB.TICKETS_TABLE+" (\n"
-                + DB.TICKET_ID + " text PRIMARY KEY,\n"
+                + DB.TICKET_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,\n"
                 + DB.USER_NAME_ID + " text NOT NULL,\n"
                 + DB.PAYMENT_ID + " text NOT NULL,\n"
                 + DB.FLIGHT_INFO_ID + " text NOT NULL,\n"
+                + DB.STATUS + " text NOT NULL,\n"
                 + "FOREIGN KEY ("+ DB.USER_NAME_ID +") REFERENCES "
                 + DB.CUSTOMERS_TABLE + "("+ DB.USER_NAME_ID +"),\n"
                 + "FOREIGN KEY ("+ DB.PAYMENT_ID +") REFERENCES "
@@ -43,9 +45,8 @@ public class CreateMyDatabases {
                 + ");";
 
         String payments = "CREATE TABLE IF NOT EXISTS "+ DB.PAYMENTS_TABLE+" (\n"
-                + DB.PAYMENT_ID + " text PRIMARY KEY,\n"
+                + DB.PAYMENT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,\n"
                 + DB.AMOUNT + " text NOT NULL,\n"
-                + DB.STATUS + " text NOT NULL,\n"
                 + DB.CARD_NUMBER + " text NOT NULL,\n"
                 + "FOREIGN KEY ("+ DB.CARD_NUMBER +") REFERENCES "
                 + DB.CREDIT_CARDS_TABLE + "("+ DB.CARD_NUMBER +")\n"
@@ -59,7 +60,13 @@ public class CreateMyDatabases {
 
         String airplanes = "CREATE TABLE IF NOT EXISTS "+ DB.AIRPLANES_TABLE+" (\n"
                 + DB.AIRPLANE_ID + " text PRIMARY KEY,\n"
-                + DB.AIRLINE_NAME + " text NOT NULL\n"
+                + DB.AIRLINE_NAME + " text NOT NULL,\n"
+                + DB.AIRPLANE_SEATS + " text NOT NULL\n"
+                + ");";
+
+        String locations = "CREATE TABLE IF NOT EXISTS "+ DB.LOCATIONS_TABLE+" (\n"
+                + DB.LOCATION_NAME + " text PRIMARY KEY,\n"
+                + DB.DISTANCE_FROM_WEST + " text NOT NULL\n"
                 + ");";
 
         try (Connection con = DatabaseHandler.createOrConnect(DB.PTBS_DATABASE);) {
@@ -69,6 +76,7 @@ public class CreateMyDatabases {
             con.createStatement().execute(payments);
             con.createStatement().execute(credit_cards);
             con.createStatement().execute(airplanes);
+            con.createStatement().execute(locations);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -87,30 +95,98 @@ public class CreateMyDatabases {
             e.printStackTrace();
         }
 
-        // populate tables in database with fake data
+//        populate tables in database with fake data
         populateFakeData();
 
     }
 
+//    fill tables with fake data by uncommenting if needed
     private static void populateFakeData() {
-        // todo: fill tables with fake data
+//        populateLocations();
+//        populateAirplanes();
+//        populateFlights();
+//        populateUsers();
+    }
 
-        //locations available for travel
-        String VANCOUVER = "Vancouver";
-        String AIRDRIE = "Airdrie";
-        String BURNABY = "Burnaby";
-        String CALGARY = "Calgary";
-        String TORONTO = "Toronto";
-        String ABBOTSFORD = "Abbotsford";
+    private static void populateUsers() {
+        String sql = "INSERT INTO "+DB.CUSTOMERS_TABLE+"(" +
+                DB.USER_NAME_ID +","+ DB.FULL_NAME +
+                ","+ DB.PASSWORD +","+ DB.EMAIL+","+ DB.PHONE+
+                ") VALUES(?,?,?,?,?)";
 
-        //airline companies and available airplanes
-        String QUICK_AIRLINES = "QuickAirlines";
-        String WINDJET = "WindJet";
-        String BLAZEJET = "BlazeJet";
+        for (int i = 0; i<DB.CUSTOMERS.length; i++) {
+            try (Connection con = DatabaseHandler.createOrConnect(DB.PTBS_DATABASE);
+                 PreparedStatement pst = con.prepareStatement(sql);) {
+                String[] parts = DB.CUSTOMERS[i].split(",");
+                pst.setString(1, parts[0]);
+                pst.setString(2, parts[1]);
+                pst.setString(3, String.valueOf(parts[2].hashCode()));
+                pst.setString(4, parts[3]);
+                pst.setString(5, parts[4]);
+                pst.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
 
-        String CRAZY_AIRLINES = "CrazyAirlines";
-        String KNOTCHJET = "KnotchJet";
-        String RICOCHETJET = "RicochetJet";
+    }
+
+    private static void populateFlights() {
+        String sql = "INSERT INTO "+DB.FLIGHTS_INFO_TABLE+"(" +
+                DB.DESTINATION +","+ DB.DEPARTURE +
+                ","+ DB.TIME +","+ DB.AIRPLANE_ID+
+                ") VALUES(?,?,?,?)";
+
+        for (int i = 0; i<DB.FLIGHT_INFOS.length; i++) {
+            try (Connection con = DatabaseHandler.createOrConnect(DB.PTBS_DATABASE);
+                 PreparedStatement pst = con.prepareStatement(sql);) {
+                String[] parts = DB.FLIGHT_INFOS[i].split(",");
+                pst.setString(1, parts[0]);
+                pst.setString(2, parts[1]);
+                pst.setString(3, parts[2]);
+                pst.setString(4, parts[3]);
+                pst.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private static void populateAirplanes() {
+        String sql = "INSERT INTO "+DB.AIRPLANES_TABLE+"(" +
+                DB.AIRPLANE_ID +","+ DB.AIRLINE_NAME +","+ DB.AIRPLANE_SEATS +
+                ") VALUES(?,?,?)";
+
+        for (int i = 0; i<DB.AIRPLANES.length; i++) {
+            try (Connection con = DatabaseHandler.createOrConnect(DB.PTBS_DATABASE);
+                 PreparedStatement pst = con.prepareStatement(sql);) {
+                String[] parts = DB.AIRPLANES[i].split(",");
+                pst.setString(1, parts[0]);
+                pst.setString(2, parts[1]);
+                pst.setString(3, parts[2]);
+                pst.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private static void populateLocations() {
+        String sql = "INSERT INTO "+DB.LOCATIONS_TABLE+"(" +
+                DB.LOCATION_NAME +","+ DB.DISTANCE_FROM_WEST +
+                ") VALUES(?,?)";
+
+        for (int i = 0; i<DB.LOCATIONS.length; i++) {
+            try (Connection con = DatabaseHandler.createOrConnect(DB.PTBS_DATABASE);
+                 PreparedStatement pst = con.prepareStatement(sql);) {
+                pst.setString(1, DB.LOCATIONS[i]);
+                pst.setString(2, DB.DISTANCE[i]);
+                pst.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
 }

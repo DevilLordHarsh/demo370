@@ -1,0 +1,8 @@
+  <div>
+
+    #if($uname)
+    #include("templates/creditcardform.txt")
+    #else <h4> You must be logged in to buy the ticket! </h4>
+    #end
+
+  </div>
