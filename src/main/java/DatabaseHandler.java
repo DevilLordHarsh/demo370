@@ -120,18 +120,14 @@ public class DatabaseHandler {
 
     public static ArrayList<String[]> getTicketHistory(String username) {
         ArrayList<String[]> tickets = new ArrayList<>();
-        String sql = "SELECT "+DB.DESTINATION+","+DB.DEPARTURE+","+DB.TIME+
-                ","+DB.AIRLINE_NAME+","+DB.CARD_NUMBER+","+DB.AMOUNT+
-                ","+DB.TICKETS_TABLE+"."+DB.STATUS+ " FROM " + DB.TICKETS_TABLE+
-                "\n INNER JOIN "+ DB.FLIGHTS_INFO_TABLE + " as f ON "+
-                DB.TICKETS_TABLE+"."+DB.FLIGHT_INFO_ID+" = "+
-                "f."+DB.FLIGHT_INFO_ID+
-                "\n INNER JOIN "+ DB.PAYMENTS_TABLE + " as p ON "+
-                DB.TICKETS_TABLE+"."+DB.PAYMENT_ID+" = "+
-                "p."+DB.PAYMENT_ID+
-                "\n INNER JOIN "+ DB.AIRPLANES_TABLE + " as a ON "+
-                "f."+DB.AIRPLANE_ID+" = "+
-                "a."+DB.AIRPLANE_ID;
+//        todo: get data only for this given username and no other.
+        String sql = "SELECT a."+DB.AIRLINE_NAME+", f."+DB.DESTINATION+", f."+DB.DEPARTURE+", f."+DB.TIME+", p."+DB.CARD_NUMBER+", p."+DB.AMOUNT+", t."+DB.STATUS+
+        "\n FROM "+DB.CUSTOMERS_TABLE+" AS c, "+DB.TICKETS_TABLE+" AS t, "+DB.AIRPLANES_TABLE+" AS a, "+DB.FLIGHTS_INFO_TABLE+" AS f, "+DB.PAYMENTS_TABLE+" AS p"+
+        "\n WHERE (c."+DB.USER_NAME_ID+" = t."+DB.USER_NAME_ID+" AND "+
+                "f."+DB.FLIGHT_INFO_ID+" = t."+DB.FLIGHT_INFO_ID+" AND "+
+                "p."+DB.PAYMENT_ID+" = t."+DB.PAYMENT_ID+" AND "+
+                "a."+DB.AIRPLANE_ID+" = f."+DB.AIRPLANE_ID+" AND "+
+                "t."+DB.USER_NAME_ID+" = '"+username+"')";
 
         try (Connection con = DatabaseHandler.createOrConnect(DB.PTBS_DATABASE);
              Statement stm = con.createStatement();

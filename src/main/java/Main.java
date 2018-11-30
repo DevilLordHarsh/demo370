@@ -1,7 +1,6 @@
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
-import spark.Session;
 import spark.template.velocity.VelocityTemplateEngine;
 
 import java.util.*;
@@ -53,7 +52,7 @@ public class Main {
 
         // Handling user login requests
         post("/login", (req, res) -> {
-            if (UserHandler.loginUser(req.queryParams(USER_NAME), req.queryParams(PASSWORD))) {
+            if (AuthorizationSystem.loginUser(req.queryParams(USER_NAME), req.queryParams(PASSWORD))) {
                 res.cookie(USER_NAME, req.queryParams(USER_NAME), MAX_AGE);
                 res.redirect("/");
             }
@@ -74,7 +73,7 @@ public class Main {
 
         // Handling registration requests for new users
         post("/register", (req, res) -> {
-            if (UserHandler.registerUser(req.queryParams(USER_NAME),
+            if (AuthorizationSystem.registerUser(req.queryParams(USER_NAME),
                     req.queryParams(FULL_NAME), req.queryParams(PASSWORD),
                     req.queryParams(EMAIL), req.queryParams(PHONE))) {
                 return showError("Registered successfully!");
@@ -85,9 +84,9 @@ public class Main {
         // Getting credit card info to process payment
         post("/payment", (req, res) -> {
             String[] params = getCookies(req);
-            if (UserHandler.loginUser(params[0], req.queryParams(PASSWORD))) {
+            if (AuthorizationSystem.loginUser(params[0], req.queryParams(PASSWORD))) {
                 String price = String.valueOf(DatabaseHandler.getTicketPrice(params[1], params[2]));
-                if (FakePaymentSystem.makePayment(req.queryParams(CARD_NUM), req.queryParams(CVV),
+                if (PaymentSystem.processPayment(req.queryParams(CARD_NUM), req.queryParams(CVV),
                         req.queryParams(EXPIRY), price)) {
                     DatabaseHandler.addTicket(params[0], params[1], params[2], params[3],
                             req.queryParams(CARD_NUM), req.queryParams(CVV),

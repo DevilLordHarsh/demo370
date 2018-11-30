@@ -5,15 +5,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Class to handle user's registration and login
+ * Class to handle user's registration,
+ * and to authorize valid users
  */
-public class UserHandler {
+public class AuthorizationSystem {
 
     /**
      * Registers, and adds a new user to the database
-     * @param name
-     * @param fname
-     * @param password
+     * @param name user's unique name as account id
+     * @param fname user's full name
+     * @param password user's account password
      * @param email
      * @param phone
      * @return true if user is successfully registered in database,
