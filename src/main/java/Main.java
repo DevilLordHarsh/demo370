@@ -21,7 +21,7 @@ public class Main {
 
     // webpage template file locations
     private static final String INDEX = "templates/index.vm";
-    private static final String USER_PROFILE = "templates/userprofile.vm";
+    private static final String USER_PROFILE = "templates/useraccount.vm";
     private static final String LOGGED = "templates/logged.vm";
     private static final String NOT_LOGGED = "templates/notlogged.vm";
     private static final String ERROR = "templates/error.vm";
@@ -39,8 +39,6 @@ public class Main {
 
         // Create and populate databases to demonstrate working of this application
         CreateMyDatabases.init();
-
-        get("/hello", (request, response) -> showTestPage(), new VelocityTemplateEngine());
 
         // Main program homepage. Enter in browser, address "localhost:4567"
         get("/", (req, res) -> {
@@ -105,15 +103,8 @@ public class Main {
             return showError("Wrong password!");
         }, new VelocityTemplateEngine());
     }
+
     // Methods serving webpages dynamically
-
-    static ModelAndView showTestPage() {
-        Map<String, Object> model = new HashMap<>();
-        model.put("istrue", true);
-        model.put("message", "heyhey");
-        return new ModelAndView(model, "templates/hello.vm");
-    }
-
     static ModelAndView showError(String message) {
         Map<String, Object> model = new HashMap<>();
         model.put("message", message);

@@ -2,6 +2,6 @@
 
   #parse($showlogged)
   
-  #parse("templates/userprofilemenu.vm")
+  #parse("templates/ticketshistory.vm")
 
 #include("templates/afterbody.txt")
