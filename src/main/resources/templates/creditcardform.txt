@@ -4,19 +4,19 @@
       <div class="cleaning">
 	<br>
         <label for="cnumber"><b>Enter credit card number: </b></label><br>
-        <input type="text" placeholder="16 digit card number" name="cnumber" required>
+        <input type="tel" placeholder="8 to 19 digit card number" name="cnumber" pattern="[0-9]{8,19}"required>
       </div>
 
       <div class="cleaning">
 	<br>
         <label for="ccvv"><b>Enter card verification value: </b></label><br>
-        <input type="text" placeholder="3 digit security code" name="ccvv" required>
+        <input type="tel" placeholder="123" name="ccvv" pattern="[0-9]{3}" required>
       </div>
 
       <div class="cleaning">
 	<br>
         <label for="cexpiry"><b>Enter credit card expiry date: </b></label><br>
-        <input type="text" placeholder="e.g. 22dec2018" name="cexpiry" required>
+        <input type="tel" placeholder="02/20" name="cexpiry" pattern="[0-3]{1}[1-31]/[0-9]{2}" required>
       </div>
 
       <div class="cleaning">

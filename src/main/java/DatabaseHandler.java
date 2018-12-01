@@ -120,7 +120,6 @@ public class DatabaseHandler {
 
     public static ArrayList<String[]> getTicketHistory(String username) {
         ArrayList<String[]> tickets = new ArrayList<>();
-//        todo: get data only for this given username and no other.
         String sql = "SELECT a."+DB.AIRLINE_NAME+", f."+DB.DESTINATION+", f."+DB.DEPARTURE+", f."+DB.TIME+", p."+DB.CARD_NUMBER+", p."+DB.AMOUNT+", t."+DB.STATUS+
         "\n FROM "+DB.CUSTOMERS_TABLE+" AS c, "+DB.TICKETS_TABLE+" AS t, "+DB.AIRPLANES_TABLE+" AS a, "+DB.FLIGHTS_INFO_TABLE+" AS f, "+DB.PAYMENTS_TABLE+" AS p"+
         "\n WHERE (c."+DB.USER_NAME_ID+" = t."+DB.USER_NAME_ID+" AND "+
