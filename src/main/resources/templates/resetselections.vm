@@ -1,0 +1,4 @@
+
+    <form action="/reset" method="post" style="display:block;">
+      <button class="button" style="background-color:#f4b642;" type="submit">Reset Flight</button>
+    </form>

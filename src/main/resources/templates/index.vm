@@ -15,13 +15,16 @@
     #if($time)
     <div class="show_ticket"><font size="5"><b> $time </b>, Ticket price: $ <b> $price </b></font></div>
     #parse("templates/buyticket.vm")
+    #parse("templates/resetselections.vm")
 
     #else
     #parse("templates/formdatechosen.vm")
+    #parse("templates/resetselections.vm")
     #end
 
     #else
     #parse("templates/formdeparturechosen.vm")
+    #parse("templates/resetselections.vm")
     #end
 
     #else

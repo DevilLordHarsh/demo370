@@ -2,10 +2,6 @@
     <button class="button" onclick="document.getElementById('id01').style.display='block';document.getElementById('id02').style.display='none'">Login</button>
     <button class="button" onclick="document.getElementById('id02').style.display='block';document.getElementById('id01').style.display='none'">Register</button>
 
-    <form action="/logout" method="post" style="display:inline-block;">
-      <button class="button" style="background-color:#f4b642;" type="submit">Clear Selections</button>
-    </form>
-
   #include("templates/loginform.txt")
 
   #include("templates/registerform.txt")

@@ -61,9 +61,15 @@ public class Main {
 
         // Logging out a user
         post("/logout", (req, res) -> {
-            removeCookies(req, res);
+            clearUserSession(res);
             res.redirect("/");
         return "Redirect failed!";});
+
+        // Resets selections made by user of flight details
+        post("/reset", (req, res) -> {
+            clearFlightSelectionDetails(res);
+            res.redirect("/");
+            return "Redirect failed!";});
 
         // Show user their profile page
         post("/userprofile", (req, res) -> {
@@ -182,8 +188,14 @@ public class Main {
         if (req.queryParams(TIME) != null) res.cookie(TIME, req.queryParams(TIME), MAX_AGE);
     }
 
-    private static void removeCookies(Request req, Response res) {
+//    deletes all stored cookies, meaning user is logged out
+    private static void clearUserSession(Response res) {
         res.removeCookie(USER_NAME);
+        clearFlightSelectionDetails(res);
+    }
+
+//    reset flight selections made by the user
+    private static void clearFlightSelectionDetails(Response res) {
         res.removeCookie(DEST);
         res.removeCookie(DEP);
         res.removeCookie(TIME);
