@@ -35,6 +35,7 @@ public class CreateMyDatabases {
                 + DB.USER_NAME_ID + " text NOT NULL,\n"
                 + DB.PAYMENT_ID + " text NOT NULL,\n"
                 + DB.FLIGHT_INFO_ID + " text NOT NULL,\n"
+                + DB.SEAT + " text,\n"
                 + DB.STATUS + " text NOT NULL,\n"
                 + "FOREIGN KEY ("+ DB.USER_NAME_ID +") REFERENCES "
                 + DB.CUSTOMERS_TABLE + "("+ DB.USER_NAME_ID +"),\n"
@@ -88,12 +89,6 @@ public class CreateMyDatabases {
                 + "FOREIGN KEY ("+ DB.TICKET_ID +") REFERENCES "
                 + DB.TICKETS_TABLE + "("+ DB.TICKET_ID +")\n"
                 + ");";
-
-        try (Connection con = DatabaseHandler.createOrConnect(DB.ARCHIVE_DATABASE);) {
-            con.createStatement().execute(archive);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
 
 //        populate tables in database with fake data
         populateFakeData();

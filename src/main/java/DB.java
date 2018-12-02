@@ -8,7 +8,6 @@ public class DB {
 
     // database file locations
     public static final String PTBS_DATABASE = "src/main/resources/dbs/PTBS.db";
-    public static final String ARCHIVE_DATABASE = "src/main/resources/dbs/archive.db";
 
     // table names and attributes
     public static final String CUSTOMERS_TABLE = "customers";
@@ -28,6 +27,7 @@ public class DB {
     public static final String TICKET_ID = "ticket_id";
     public static final String ACTIVE_TICKET = "Active";
     public static final String INACTIVE_TICKET = "Cancelled";
+    public static final String SEAT = "seat";
     public static final String STATUS = "status";
 
     public static final String CREDIT_CARDS_TABLE = "credit_cards";

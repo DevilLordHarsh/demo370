@@ -33,6 +33,7 @@ public class Main {
     private static final String SHOW_LOGGED = "showlogged";
     private static final String TICKETS_HISTORY = "tickets_history";
 
+    // expiration date to be set for cookies in seconds
     private static final int MAX_AGE = 3600;
 
     public static void main(String[] args) {
@@ -40,78 +41,133 @@ public class Main {
         // Create and populate databases to demonstrate working of this application
         CreateMyDatabases.init();
 
+
         // Main program homepage. Enter in browser, address "localhost:4567"
         get("/", (req, res) -> {
+
             setCookies(req, res);
             String[] params = getCookies(req);
             updateParams(req, params);
+
             return showPage(params[0], params[1], params[2], params[3], INDEX);
+
         }, new VelocityTemplateEngine());
+
 
         // Handling user login requests
         post("/login", (req, res) -> {
+
             if (AuthorizationSystem.loginUser(req.queryParams(USER_NAME), req.queryParams(PASSWORD))) {
                 res.cookie(USER_NAME, req.queryParams(USER_NAME), MAX_AGE);
                 res.redirect("/");
             }
-            return showError("Login Error!");
+
+            return showMessage("Login Error!");
+
         }, new VelocityTemplateEngine());
 
-        // Logging out a user
+
+        // Log out the user and return to homepage
         post("/logout", (req, res) -> {
+
             clearUserSession(res);
             res.redirect("/");
+
         return "Redirect failed!";});
+
 
         // Resets selections made by user of flight details
         post("/reset", (req, res) -> {
+
             clearFlightSelectionDetails(res);
             res.redirect("/");
+
             return "Redirect failed!";});
+
 
         // Show user their profile page
         post("/userprofile", (req, res) -> {
+
             String[] params = getCookies(req);
+
             return showPage(params[0], params[1], params[2], params[3], USER_PROFILE);
+
         }, new VelocityTemplateEngine());
+
 
         // Handling registration requests for new users
         post("/register", (req, res) -> {
+
             if (AuthorizationSystem.registerUser(req.queryParams(USER_NAME),
                     req.queryParams(FULL_NAME), req.queryParams(PASSWORD),
                     req.queryParams(EMAIL), req.queryParams(PHONE))) {
-                return showError("Registered successfully!");
+
+                return showMessage("Registered successfully!");
             }
-            else return showError("Registration Error! Try different unique username.");
+
+            else return showMessage("Registration Error! Try different unique username.");
+
         }, new VelocityTemplateEngine());
+
+
+        // Cancels a ticket bought by the user. Do not use,
+        // the feature is still Under development!
+        post("/cancelticket", (req, res) -> {
+
+            DatabaseHandler.cancelTicket(req.queryParams("cancelticket"));
+
+            String[] params = getCookies(req);
+
+            return showPage(params[0], params[1], params[2], params[3], USER_PROFILE);
+
+        }, new VelocityTemplateEngine());
+
 
         // Getting credit card info to process payment
         post("/payment", (req, res) -> {
+
             String[] params = getCookies(req);
+
+            // confirm that user is valid
             if (AuthorizationSystem.loginUser(params[0], req.queryParams(PASSWORD))) {
                 String price = String.valueOf(DatabaseHandler.getTicketPrice(params[1], params[2]));
+
+                // check if payment made by user is successful
                 if (PaymentSystem.processPayment(req.queryParams(CARD_NUM), req.queryParams(CVV),
                         req.queryParams(EXPIRY), price)) {
+
+                    // add ticket, and update database accordingly
                     DatabaseHandler.addTicket(params[0], params[1], params[2], params[3],
                             req.queryParams(CARD_NUM), req.queryParams(CVV),
                             req.queryParams(EXPIRY), price);
-//                    todo: send email and text to email addr and phone num of the user
+
+                    // send notification to the user
+                    NotificationSystem.sendNotification("fakeUserId", "fakeTicketId");
+
+                    // return the user to their account's profile webpage
                     return showPage(params[0], params[1], params[2], params[3], USER_PROFILE);
                 }
-                else return showError("Payment did not complete successfully!");
+
+                else return showMessage("Payment did not complete successfully!");
             }
-            return showError("Wrong password!");
+
+            return showMessage("Wrong password!");
+
         }, new VelocityTemplateEngine());
     }
 
-    // Methods serving webpages dynamically
-    static ModelAndView showError(String message) {
+    // Message webpage to be shown when an error occurs
+    static ModelAndView showMessage(String message) {
+
         Map<String, Object> model = new HashMap<>();
         model.put("message", message);
+
         return new ModelAndView(model, ERROR);
     }
 
+    // Main webpage of our application where a user can use our system
     static ModelAndView showPage(String name, String dest, String dep, String time, String vmfile) {
+
         Map<String, Object> model = new HashMap<>();
         if (name != null) {
             model.put(SHOW_LOGGED, LOGGED);
@@ -133,13 +189,16 @@ public class Main {
         else model.put("destinationlocations", DatabaseHandler.getDestinations());
 
         if (vmfile.equals(USER_PROFILE)) {
-            model.put(TICKETS_HISTORY, DatabaseHandler.getTicketHistory(name));
+            model.put(TICKETS_HISTORY, DatabaseHandler.getTicketsHistory(name));
         }
+
         return new ModelAndView(model, vmfile);
     }
 
-
+    // Use values found in request to update variable,
+    // when cookies are not yet set on client browser
     private static void updateParams(Request req, String[] params) {
+
         if (req.queryParams(USER_NAME) != null) {
             params[0] = req.queryParams(USER_NAME);
         }
@@ -152,10 +211,11 @@ public class Main {
         if (req.queryParams(TIME) != null) {
             params[3] = req.queryParams(TIME);
         }
-
     }
 
+    // Retrieve often used cookies in an array for ease of use
     private static String[] getCookies(Request req) {
+
         String[] params = new String[4];
         Map cookies = req.cookies();
         if (cookies.containsKey(USER_NAME)) {
@@ -173,19 +233,20 @@ public class Main {
         return params;
     }
 
+    //    deletes all stored cookies, meaning user is logged out
+    private static void clearUserSession(Response res) {
+        res.removeCookie(USER_NAME);
+        clearFlightSelectionDetails(res);
+    }
+
+    //    store flight selections made by the user
     private static void setCookies(Request req, Response res) {
         if (req.queryParams(DEST) != null) res.cookie(DEST, req.queryParams(DEST), MAX_AGE);
         if (req.queryParams(DEP) != null) res.cookie(DEP, req.queryParams(DEP), MAX_AGE);
         if (req.queryParams(TIME) != null) res.cookie(TIME, req.queryParams(TIME), MAX_AGE);
     }
 
-//    deletes all stored cookies, meaning user is logged out
-    private static void clearUserSession(Response res) {
-        res.removeCookie(USER_NAME);
-        clearFlightSelectionDetails(res);
-    }
-
-//    reset flight selections made by the user
+    //    reset flight selections made by the user
     private static void clearFlightSelectionDetails(Response res) {
         res.removeCookie(DEST);
         res.removeCookie(DEP);
